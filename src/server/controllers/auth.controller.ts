@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import "dotenv/config";
 import nodeCrypto from "crypto";
 import bcrypt from "bcrypt";
@@ -70,7 +71,11 @@ const register: RequestHandler = async (req, res) => {
     activationToken,
   );
 
-  await mailer.sendActivationLink(email, activationToken);
+  try {
+    await mailer.sendActivationLink(email, activationToken);
+  } catch (e) {
+    console.log("Email failed:", e);
+  }
 
   res.json(userService.normalize(user));
 };
@@ -161,7 +166,11 @@ const requestPasswordReset: RequestHandler = async (req, res) => {
       resetTokenExpires: dayjs().add(1, "hour").toDate(),
     });
 
-    await mailer.sendResetPasswordLink(email, resetToken);
+    try {
+      await mailer.sendResetPasswordLink(email, resetToken);
+    } catch (e) {
+      console.log("Email failed:", e);
+    }
   }
 
   res.sendStatus(204);
