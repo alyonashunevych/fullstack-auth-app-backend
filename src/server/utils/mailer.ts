@@ -2,16 +2,18 @@ import "dotenv/config";
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+    user: process.env.BREVO_USER,
+    pass: process.env.BREVO_PASS,
   },
 });
 
 function send(email: string, subject: string, html: string) {
   return transporter.sendMail({
-    from: process.env.SMTP_USER,
+    from: `"Auth App" <${process.env.BREVO_SENDER}>`,
     to: email,
     subject,
     html,
